@@ -199,7 +199,7 @@ public:
 
         checkColor(r,g,b, ball_col, score);
 
-        RTF_TEST_CHECK(score>0,Asserter::format(" ***** Total score = %d/15 ***** ",score));
+        RTF_TEST_CHECK(score>0,Asserter::format("Total score = %d",score));
     }
 
     /****************************************************/
