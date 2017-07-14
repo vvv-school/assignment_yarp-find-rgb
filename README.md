@@ -15,9 +15,9 @@ Particularly, we want to check if the **robot neck** and **eyes** are ok or not.
 
 We ask you to **design a simple test** to check all these functionalities.
 
-- The robot stands in its wonderful world and a colorful ball appears next to it :sparkles:.
+- The robot stands in its wonderful world and a colorful ball pops up next to it :sparkles:.
 - We want to test the robot cameras, by checking  if they are able to **detect the correct ball color**.
-- However, the ball is not in front of the robot view (:smiling_imp:). Look for the ball while moving the robot head, until the robot can stare into this wonderful ball! In this way, we can check also if the neck is working.
+- However, the ball is not located in front of the robot view (:smiling_imp:). Look for the ball while moving the robot head, until the robot can stare at this wonderful ball! This way, we can check also if the neck is working.
 
 
 In practice, the test should be designed like that:
