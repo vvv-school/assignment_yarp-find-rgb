@@ -1,0 +1,62 @@
+<application>
+
+  <name>Assignment on Basic Functionationalities</name> 
+
+  <dependencies>
+      <port>/yarplogger</port>
+      <port>/icubSim/cam/left</port>
+      <port>/icubSim/cam/right</port>
+  </dependencies>
+
+
+  <module>
+       <name>assignment_yarp-find-rgb-ball</name>      
+       <environment>YARP_FORWARD_LOG_ENABLE=1</environment>
+       <node>localhost</node>
+  </module>
+
+  <module>
+       <name>assignment_yarp-find-rgb-head</name>
+       <environment>YARP_FORWARD_LOG_ENABLE=1</environment>
+       <node>localhost</node>
+  </module>
+
+  <module>
+        <name>yarpview</name>
+        <parameters>--name /viewer --x 10 --y 10</parameters>
+        <node>localhost</node>
+  </module>
+
+  <connection>
+        <from>/icubSim/cam/left</from>
+        <to>/head-viewer/img:i</to>
+        <protocol>udp</protocol>
+  </connection>
+
+  <connection>
+        <from>/icubSim/cam/left</from>
+        <to>/head/img:i</to>
+        <protocol>udp</protocol>
+  </connection>
+
+  <connection>
+        <from>/head-viewer/img:o</from>
+        <to>/viewer</to>
+        <protocol>udp</protocol>
+  </connection>
+
+  <connection>
+        <from>/angle-port</from>
+        <to>/head/ang:i</to>
+        <protocol>udp</protocol>
+  </connection>
+
+  <connection>
+        <from>/head/color:o</from>
+        <to>/color-port</to>
+        <protocol>udp</protocol>
+  </connection>
+
+</application>
+
+
