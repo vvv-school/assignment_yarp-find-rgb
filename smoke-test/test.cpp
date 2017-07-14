@@ -9,6 +9,7 @@
 #include <cmath>
 #include <array>
 #include <algorithm>
+#include <utility>
 
 #include <rtf/dll/Plugin.h>
 #include <rtf/TestAssert.h>
@@ -112,8 +113,6 @@ public:
 
         Rand::init();
 
-        //ball_col=Rand::vector(3);
-
         RTF_TEST_REPORT("Correct setup!");
 
         return true;
@@ -121,7 +120,7 @@ public:
 
     /****************************************************/
     void tearDown() override
-    {        
+    {
         anglePort.close();
         colorPort.close();
         ballPort.close();
@@ -134,8 +133,21 @@ public:
         RTF_TEST_REPORT("Running tests...");
         unsigned int score=0;
 
-        //while((ball_col[0]==ball_col[1]) || (ball_col[1]==ball_col[2]) || (ball_col[0]==ball_col[2]))
-        ball_col=Rand::vector(3);
+        // pick up a rgb color randomly
+        // making sure that r!=g!=b
+        Vector min(3),max(3);
+        min[0]=0.0;   max[0]=0.33;
+        min[1]=0.331; max[1]=0.66;
+        min[2]=0.661; max[2]=1.0;
+        ball_col=Rand::vector(min,max);
+
+        // shuffle rgb randomly
+        if (Rand::scalar()<0.5)
+            swap(ball_col[0],ball_col[1]);
+        if (Rand::scalar()<0.5)
+            swap(ball_col[0],ball_col[2]);
+        if (Rand::scalar()<0.5)
+            swap(ball_col[1],ball_col[2]);
 
         ball_pos.resize(3,0.0);
         ball_pos[0]=-0.4;
@@ -185,19 +197,10 @@ public:
 
         RTF_TEST_CHECK(score>0,Asserter::format(" ***** Partial score = %d/15 ***** ", score));
 
-//        RTF_TEST_CHECK(score>0,Asserter::format("Received r = %f", r));
-//        RTF_TEST_CHECK(score>0,Asserter::format("Received g = %f", g));
-//        RTF_TEST_CHECK(score>0,Asserter::format("Received b = %f", b));
-
-//        RTF_TEST_CHECK(score>0,Asserter::format("Real r = %f", ball_col[0]));
-//        RTF_TEST_CHECK(score>0,Asserter::format("Real g = %f", ball_col[1]));
-//        RTF_TEST_CHECK(score>0,Asserter::format("Real b = %f", ball_col[2]));
-
         checkColor(r,g,b, ball_col, score);
 
         RTF_TEST_CHECK(score>0,Asserter::format(" ***** Total score = %d/15 ***** ",score));
     }
-
 
     /****************************************************/
     void checkColor(const double &r, const double &g, const double &b,  Vector color_ball, unsigned int &score)
@@ -212,14 +215,6 @@ public:
 
         if ((abs(hsv_true[0]-hsv_received[0])<5.0) && (abs(hsv_true[1]-hsv_received[1])<5.0) && (abs(hsv_true[2]-hsv_received[2])<35.0))
             score+=5;
-
-//        RTF_TEST_CHECK(score>0,Asserter::format("HSV TRUE 0 %f", hsv_true[0]));
-//        RTF_TEST_CHECK(score>0,Asserter::format("HSV TRUE 1 %f", hsv_true[1]));
-//        RTF_TEST_CHECK(score>0,Asserter::format("HSV TRUE 2 %f", hsv_true[2]));
-
-//        RTF_TEST_CHECK(score>0,Asserter::format("HSV rE 0 %f", hsv_received[0]));
-//        RTF_TEST_CHECK(score>0,Asserter::format("HSV r 1 %f", hsv_received[1]));
-//        RTF_TEST_CHECK(score>0,Asserter::format("HSV r 2 %f", hsv_received[2]));
     }
 
     /****************************************************/
