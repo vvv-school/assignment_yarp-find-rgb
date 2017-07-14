@@ -24,7 +24,7 @@ We ask you to **design a simple test** to check all these functionalities.
 
 In practice, the test should be designed like that:
 
-- Control the robot head with a simple **position control**. **Pay attention**:warning: the robot head has 6 DOF (degres-of-freedom):
+- Control the robot head with a simple **position control**. **Pay attention**:warning: the robot head has 6 DOF (degrees-of-freedom):
 
 ![](misc/gaze.png)
 
@@ -88,7 +88,8 @@ The test is considered completely successful if you are able to:
 ## Expected output
 
 The ball appears next to the robot, but the robot is not looking at it! (**Pay attention** :warning:: the ball position is always the same, whereas the color magically changes 
-every time you run your code  :smiling_imp:)
+every time you run your code :smiling_imp:)
+
 ![](misc/test-beginning.png)
 
 At the end of your test, you should get something like that:
@@ -96,12 +97,11 @@ At the end of your test, you should get something like that:
 ![](misc/test-end.png)
 
 ## How to proceed
-We provide you with a starter code that contains missing gaps you have to fill in. Don't panic, most of the software is already done and, where missing, is full of comments to help you!
-
+We provide you with a starter code that contains missing gaps you have to fill in. Don't panic, most of the software is already done and, where missing, is full of comments to help you out!
 
 Once done, you can test your code in two ways:
 
-1. **Manually**: running the _yarpmanager scripts_ provided from within [**app/scripts**](./app/scripts). This will help you to interact with your code.
+1. **Manually**: running the _yarpmanager scripts_ provided from within [**app/scripts**](./app/scripts). This will help you interact with your code.
 1. **Automatically**: [running the script **test.sh**](https://github.com/vvv-school/vvv-school.github.io/blob/master/instructions/how-to-run-smoke-tests.md) in the **smoke-test** directory. This will give you an idea of how many points you might score.
 
 
