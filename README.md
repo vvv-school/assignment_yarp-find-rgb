@@ -8,8 +8,6 @@ For this assignment, you just need to be aware of:
 - some Yarp Motor Interfaces: [yarp::dev::IEncoders](http://www.yarp.it/classyarp_1_1dev_1_1IEncoders.html), [yarp::dev::IPositionControl2](http://www.yarp.it/classyarp_1_1dev_1_1IPositionControl2.html) and [yarp::dev::IControlMode2](http://www.yarp.it/classyarp_1_1dev_1_1IControlMode2.html);
 - [yarp::sig::Image](http://www.yarp.it/classyarp_1_1sig_1_1Image.html) and [yarp::sig::PixelRgb](http://www.yarp.it/structyarp_1_1sig_1_1PixelRgb.html).
 
-Don't panic :smiley:, if you attended [this tutorial](), you are ready to start!
-
 # Assignment
 
 Before starting working on the robot, we need to check :flashlight: if everything is working fine :wrench:.
@@ -69,8 +67,8 @@ yarp: Receiving input from /head/color:o to /color-port using udp
 184.0 199.0 207.0
 ```
 
-## Requirements to satisfy
-The test is considered completely successful if you are able to:
+## Requirements to meet
+The test is considered fully passed if you are able to:
 1. correctly implement the position control and choose the head joint to move;
 2. correctly send the data through the port;
 3. acquire the RGB code from the correct pixel of the image;
