@@ -14,7 +14,6 @@
 #include <yarp/os/RFModule.h>
 #include <yarp/os/Bottle.h>
 #include <yarp/sig/Image.h>
-#include <yarp/os/RateThread.h>
 #include <yarp/os/BufferedPort.h>
 #include <yarp/os/RpcClient.h>
 #include <yarp/os/Time.h>
@@ -34,56 +33,6 @@ using namespace yarp::dev;
 
 using namespace iCub::ctrl;
 
-
-class VisThread : public RateThread
-{
-    BufferedPort<ImageOf<PixelRgb> > outPort;
-
-public:
-
-    BufferedPort<ImageOf<PixelRgb> > imagePort;
-    /****************************************************/
-    VisThread(): RateThread(0.01){}
-
-    /****************************************************/
-    bool threadInit()
-    {
-        bool ret;
-
-        // open input and output port for visualization
-        ret = imagePort.open("/head-viewer/img:i");
-        ret = ret && outPort.open("/head-viewer/img:o");
-        return ret;
-    }
-
-    /****************************************************/
-    void run()
-    {
-        // read from the robot camera
-        ImageOf<PixelRgb> *image=imagePort.read(false);
-
-        // check if image is received
-        if (image!=NULL)
-        {
-
-            ImageOf<PixelRgb> &outImage=outPort.prepare();
-            // send the robot camera image to a viewer
-            outImage=*image;
-            outPort.write();
-        }
-    }
-
-    /****************************************************/
-    void threadRelease()
-    {
-        // close all ports after checking if they are open
-        if (!imagePort.isClosed())
-            imagePort.close();
-        if (!outPort.isClosed())
-            outPort.close();
-    }
-};
-
 class HeadMover : public RFModule
 {
 protected:
@@ -102,9 +51,6 @@ protected:
     BufferedPort<ImageOf<PixelRgb> > imagePort;       // read image from one robot camera
     BufferedPort<Bottle>             anglePort;       // receive the angle for moving the head
     BufferedPort<Bottle>             colorPort;       // send the RGB code of the center of the image
-
-    // visualization thread
-    VisThread *vis;
 
     bool go_on;
 
@@ -205,12 +151,6 @@ public:
         // configure the ports
         config_ok = config_ok && configPorts();
 
-        // create the thread for visualization
-        vis = new VisThread();
-
-        // start the visualization thread
-        vis->start();
-
         // configure updateModule logic
         go_on=false;
 
@@ -233,10 +173,6 @@ public:
             anglePort.close();
         if (!imagePort.isClosed())
             imagePort.close();
-
-        // stop and delete the visualization thread
-        vis->stop();
-        delete vis;
 
         return true;
     }
