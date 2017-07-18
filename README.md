@@ -38,7 +38,7 @@ While you are developing your code, you can send this message through the termin
 
 - open a `BufferedPort` to communicate with your module
 ```
-$ yarp write /angle-port /head/ang:i
+$ yarp write /angle-port
 ```
 and you will get something like that
 ```
@@ -55,7 +55,7 @@ yarp: Sending output from /angle-port to /head/ang:i using tcp
 **Read from a port**: you can check the RGB code sent from your code:
 - read from a `BufferedPort`:
 ```
-$ yarp read /color-port /head/color:o
+$ yarp read /color-port 
 ```
 - connect using the  _yarpmanager scripts_ provided from within [**app/scripts**](./app/scripts);
 - you should see something like that (for instance):
