@@ -57,7 +57,7 @@ class TestAssignmentYarpFindRgb : public yarp::rtf::TestCase
         cmd.addDouble(ball_col[0]);
         cmd.addDouble(ball_col[1]);
         cmd.addDouble(ball_col[2]);
-        RTF_ASSERT_ERROR_IF(ballPort.write(cmd,reply), "Unable to talk to world");
+        RTF_ASSERT_ERROR_IF_FALSE(ballPort.write(cmd,reply), "Unable to talk to world");
     }
 
     /****************************************************/
@@ -68,7 +68,7 @@ class TestAssignmentYarpFindRgb : public yarp::rtf::TestCase
         cmd.addString("del");
         cmd.addString("all");
 
-        RTF_ASSERT_ERROR_IF(ballPort.write(cmd,reply), "Unable to talk to world");
+        RTF_ASSERT_ERROR_IF_FALSE(ballPort.write(cmd,reply), "Unable to talk to world");
     }
 
 public:
@@ -93,23 +93,23 @@ public:
         option.put("remote","/icubSim/head");
         option.put("local","/test-controller");
 
-        RTF_ASSERT_ERROR_IF(driver.open(option),"Unable to connect to icubSim");
+        RTF_ASSERT_ERROR_IF_FALSE(driver.open(option),"Unable to connect to icubSim");
         driver.view(ienc);
 
         anglePort.open("/test/angle-port");
-        RTF_ASSERT_ERROR_IF(Network::connect(anglePort.getName(),
-                                             "/head/ang:i"),
-                                "Unable to connect to left target");
+        RTF_ASSERT_ERROR_IF_FALSE(Network::connect(anglePort.getName(),
+                                                   "/head/ang:i"),
+                                  "Unable to connect to left target");
 
         colorPort.open("/test/color-port");
-        RTF_ASSERT_ERROR_IF(Network::connect("/head/color:o",colorPort.getName()),
-                            "Unable to connect to right target");
+        RTF_ASSERT_ERROR_IF_FALSE(Network::connect("/head/color:o",colorPort.getName()),
+                                  "Unable to connect to right target");
 
         ballPort.open("/test/ball");
         RTF_TEST_REPORT(Asserter::format("Set rpc timeout = %g [s]",rpcTmo));
         ballPort.asPort().setTimeout(rpcTmo);
-        RTF_ASSERT_ERROR_IF(Network::connect(ballPort.getName(),"/icubSim/world"),
-                            "Unable to connect to /icubSim/world");
+        RTF_ASSERT_ERROR_IF_FALSE(Network::connect(ballPort.getName(),"/icubSim/world"),
+                                  "Unable to connect to /icubSim/world");
 
         Rand::init();
 
