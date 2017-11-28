@@ -4,7 +4,7 @@ Design a simple vision-based test
 
 For this assignment, you just need to be aware of:
 - [yarp::os::Bottle](http://www.yarp.it/classyarp_1_1os_1_1Bottle.html);
-- [yarp::os::BufferedPort](www.yarp.it/classyarp_1_1os_1_1BufferedPort.html);
+- [yarp::os::BufferedPort](http://www.yarp.it/classyarp_1_1os_1_1BufferedPort.html);
 - some Yarp Motor Interfaces: [yarp::dev::IEncoders](http://www.yarp.it/classyarp_1_1dev_1_1IEncoders.html), [yarp::dev::IPositionControl2](http://www.yarp.it/classyarp_1_1dev_1_1IPositionControl2.html) and [yarp::dev::IControlMode2](http://www.yarp.it/classyarp_1_1dev_1_1IControlMode2.html);
 - [yarp::sig::Image](http://www.yarp.it/classyarp_1_1sig_1_1Image.html) and [yarp::sig::PixelRgb](http://www.yarp.it/structyarp_1_1sig_1_1PixelRgb.html).
 
