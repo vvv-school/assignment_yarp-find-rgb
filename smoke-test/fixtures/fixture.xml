@@ -11,21 +11,21 @@
     </module>
     <module>
         <name>assignment_yarp-find-rgb-head</name>
-        <dependency>
+        <dependencies>
             <port timeout="30">/icubSim/cam/left</port>
             <port timeout="30">/icubSim/head/rpc:i </port>
             <port timeout="30">/icubSim/head/state:o</port>
             <port timeout="30">/icubSim/head/command:i</port>
             <port timeout="30">/icubSim/head/stateExt:o</port>
-        </dependency>
+        </dependencies>
         <node>testnode</node>
     </module>  
     <module>
         <name>yarpview</name>
         <parameters>--name /viewer --x 10 --y 10</parameters>
-         <dependency>
+         <dependencies>
             <port timeout="30">/icubSim/cam/left</port>
-        </dependency>
+        </dependencies>
         <node>testnode</node>
     </module>
     <connection>
