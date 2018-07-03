@@ -4,6 +4,7 @@
 //
 // Author: Giulia Vezzani - <giulia.vezzani@iit.it>
 
+#include <cstdlib>
 #include <array>
 #include <string>
 #include <fstream>
@@ -37,20 +38,20 @@ class HeadMover : public RFModule
 {
 protected:
     // driver and interfaces for controlling the head
-    PolyDriver                       driver;
-    IControlMode2                   *imod;
-    IEncoders                       *ienc;
-    IPositionControl2               *ipos;
+    PolyDriver                      driver;
+    IControlMode                   *imod;
+    IEncoders                      *ienc;
+    IPositionControl               *ipos;
 
     // angle used to move one head joint (guess which one! :))
-    double                           angle;
+    double                          angle;
     // number of head axes
-    int                              nAxes;
+    int                             nAxes;
 
     // ports required from the module
-    BufferedPort<ImageOf<PixelRgb> > imagePort;       // read image from one robot camera
-    BufferedPort<Bottle>             anglePort;       // receive the angle for moving the head
-    BufferedPort<Bottle>             colorPort;       // send the RGB code of the center of the image
+    BufferedPort<ImageOf<PixelRgb>> imagePort;      // read image from one robot camera
+    BufferedPort<Bottle>            anglePort;      // receive the angle for moving the head
+    BufferedPort<Bottle>            colorPort;      // send the RGB code of the center of the image
 
     bool go_on;
 
@@ -204,7 +205,7 @@ public:
    /****************************************************/
     bool getAngle()
     {
-        // read a Bottle containing the angle from anglePort
+        // read a bottle containing the angle
         // note: do you want the port to wait or not for an answer?
         Bottle *angle_bottle;//= FILL IN THE CODE
 
@@ -230,7 +231,7 @@ int main(int argc, char *argv[])
     if (!yarp.checkNetwork())
     {
         yError()<<"YARP doesn't seem to be available";
-        return 1;
+        return EXIT_FAILURE;
     }
 
     ResourceFinder rf;
