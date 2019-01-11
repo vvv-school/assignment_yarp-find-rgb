@@ -23,16 +23,15 @@ include(ICUBcontribOptions)
 # specify to install in $ICUBcontrib_DIR/bin
 icubcontrib_set_default_prefix()
 
-# import math symbols from standard cmath
-add_definitions(-D_USE_MATH_DEFINES)
-
 # code for creating a ball in the iCub world
 add_executable(${PROJECT_NAME}-ball ${CMAKE_SOURCE_DIR}/src/ball.cpp)
+target_compile_definitions(${PROJECT_NAME}-ball PRIVATE _USE_MATH_DEFINES)
 target_link_libraries(${PROJECT_NAME}-ball ${YARP_LIBRARIES} ctrlLib)
 install(TARGETS ${PROJECT_NAME}-ball DESTINATION bin)
 
 # code for moving the head looking for the head
 add_executable(${PROJECT_NAME}-head ${CMAKE_SOURCE_DIR}/src/head.cpp)
+target_compile_definitions(${PROJECT_NAME}-head PRIVATE _USE_MATH_DEFINES)
 target_link_libraries(${PROJECT_NAME}-head ${YARP_LIBRARIES} ctrlLib)
 install(TARGETS ${PROJECT_NAME}-head DESTINATION bin)
 
