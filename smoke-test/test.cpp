@@ -11,10 +11,10 @@
 #include <algorithm>
 #include <utility>
 
-#include <rtf/dll/Plugin.h>
-#include <rtf/TestAssert.h>
+#include <robottestingframework/dll/Plugin.h>
+#include <robottestingframework/TestAssert.h>
 
-#include <yarp/rtf/TestCase.h>
+#include <yarp/robottestingframework/TestCase.h>
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
 #include <yarp/sig/all.h>
@@ -24,14 +24,14 @@
 #include <iCub/ctrl/math.h>
 
 using namespace std;
-using namespace RTF;
+using namespace robottestingframework;
 using namespace yarp::os;
 using namespace yarp::dev;
 using namespace yarp::sig;
 using namespace yarp::math;
 using namespace iCub::ctrl;
 
-class TestAssignmentYarpFindRgb : public yarp::rtf::TestCase
+class TestAssignmentYarpFindRgb : public yarp::robottestingframework::TestCase
 {
     PolyDriver                       driver;
     IEncoders                       *ienc;
@@ -57,7 +57,7 @@ class TestAssignmentYarpFindRgb : public yarp::rtf::TestCase
         cmd.addDouble(ball_col[0]);
         cmd.addDouble(ball_col[1]);
         cmd.addDouble(ball_col[2]);
-        RTF_ASSERT_ERROR_IF_FALSE(ballPort.write(cmd,reply), "Unable to talk to world");
+        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(ballPort.write(cmd,reply), "Unable to talk to world");
     }
 
     /****************************************************/
@@ -68,13 +68,13 @@ class TestAssignmentYarpFindRgb : public yarp::rtf::TestCase
         cmd.addString("del");
         cmd.addString("all");
 
-        RTF_ASSERT_ERROR_IF_FALSE(ballPort.write(cmd,reply), "Unable to talk to world");
+        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(ballPort.write(cmd,reply), "Unable to talk to world");
     }
 
 public:
     /*****************************************************/
     TestAssignmentYarpFindRgb() :
-        yarp::rtf::TestCase("TestAssignmentYarpFindRgb")
+        yarp::robottestingframework::TestCase("TestAssignmentYarpFindRgb")
     {
     }
 
@@ -93,27 +93,27 @@ public:
         option.put("remote","/icubSim/head");
         option.put("local","/test-controller");
 
-        RTF_ASSERT_ERROR_IF_FALSE(driver.open(option),"Unable to connect to icubSim");
+        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(driver.open(option),"Unable to connect to icubSim");
         driver.view(ienc);
 
         anglePort.open("/test/angle-port");
-        RTF_ASSERT_ERROR_IF_FALSE(Network::connect(anglePort.getName(),
+        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(Network::connect(anglePort.getName(),
                                                    "/head/ang:i"),
                                   "Unable to connect to left target");
 
         colorPort.open("/test/color-port");
-        RTF_ASSERT_ERROR_IF_FALSE(Network::connect("/head/color:o",colorPort.getName()),
+        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(Network::connect("/head/color:o",colorPort.getName()),
                                   "Unable to connect to right target");
 
         ballPort.open("/test/ball");
-        RTF_TEST_REPORT(Asserter::format("Set rpc timeout = %g [s]",rpcTmo));
+        ROBOTTESTINGFRAMEWORK_TEST_REPORT(Asserter::format("Set rpc timeout = %g [s]",rpcTmo));
         ballPort.asPort().setTimeout(rpcTmo);
-        RTF_ASSERT_ERROR_IF_FALSE(Network::connect(ballPort.getName(),"/icubSim/world"),
+        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(Network::connect(ballPort.getName(),"/icubSim/world"),
                                   "Unable to connect to /icubSim/world");
 
         Rand::init();
 
-        RTF_TEST_REPORT("Correct setup!");
+        ROBOTTESTINGFRAMEWORK_TEST_REPORT("Correct setup!");
 
         return true;
     }
@@ -130,7 +130,7 @@ public:
     /****************************************************/
     void run() override
     {
-        RTF_TEST_REPORT("Running tests...");
+        ROBOTTESTINGFRAMEWORK_TEST_REPORT("Running tests...");
         unsigned int score=0;
 
         // pick up a rgb color randomly
@@ -155,11 +155,11 @@ public:
         ball_pos[2]=0.35;
         createBall();
 
-        RTF_TEST_REPORT("Ball has been created!");
+        ROBOTTESTINGFRAMEWORK_TEST_REPORT("Ball has been created!");
 
         Time::delay(5.0);
 
-        RTF_TEST_REPORT("Sending the right angle value to the head controller...");
+        ROBOTTESTINGFRAMEWORK_TEST_REPORT("Sending the right angle value to the head controller...");
         Bottle &angle_bottle=anglePort.prepare();
         angle_bottle.clear();
         angle_bottle.addString("angle");
@@ -167,18 +167,18 @@ public:
         anglePort.write();
 
         Time::delay(5.0);
-        RTF_TEST_REPORT("Testing effectiveness of the controller...");
+        ROBOTTESTINGFRAMEWORK_TEST_REPORT("Testing effectiveness of the controller...");
         int nAxes; ienc->getAxes(&nAxes);
         vector<double> encs(nAxes);
         ienc->getEncoders(encs.data());
         if (abs(encs[2]) > 5.0)
            score+= 5;
 
-        RTF_TEST_CHECK(score>0,Asserter::format(" ***** Partial score = %d/15 ***** ", score));
+        ROBOTTESTINGFRAMEWORK_TEST_CHECK(score>0,Asserter::format(" ***** Partial score = %d/15 ***** ", score));
 
         Time::delay(5.0);
 
-        RTF_TEST_REPORT("Testing ball color...");
+        ROBOTTESTINGFRAMEWORK_TEST_REPORT("Testing ball color...");
 
         double r,g,b;
         Bottle *color_ball=colorPort.read();
@@ -195,11 +195,11 @@ public:
             score+=5;
         }
 
-        RTF_TEST_CHECK(score>0,Asserter::format(" ***** Partial score = %d/15 ***** ", score));
+        ROBOTTESTINGFRAMEWORK_TEST_CHECK(score>0,Asserter::format(" ***** Partial score = %d/15 ***** ", score));
 
         checkColor(r,g,b, ball_col, score);
 
-        RTF_TEST_CHECK(score>0,Asserter::format("Total score = %d",score));
+        ROBOTTESTINGFRAMEWORK_TEST_CHECK(score>0,Asserter::format("Total score = %d",score));
     }
 
     /****************************************************/
@@ -249,4 +249,4 @@ public:
     }
 };
 
-PREPARE_PLUGIN(TestAssignmentYarpFindRgb)
+ROBOTTESTINGFRAMEWORK_PREPARE_PLUGIN(TestAssignmentYarpFindRgb)
