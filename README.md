@@ -1,5 +1,8 @@
 Design a simple vision-based test
 ===========================================
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/vvv-school/assignment_yarp-find-rgb)
+
 # Prerequisites
 
 For this assignment, you just need to be aware of:
