@@ -30,6 +30,7 @@ class BallCreation : public RFModule
 {
 private:
     RpcClient port;
+    std::string m_ball_name{""};
 
     Vector ball_pos;
     Vector ball_col;
@@ -38,29 +39,36 @@ private:
     void createBall()
     {
         Bottle cmd,reply;
-        cmd.addString("world");
-        cmd.addString("mk");
-        cmd.addString("ssph");
-        cmd.addDouble(0.06);
-        cmd.addDouble(ball_pos[0]);
-        cmd.addDouble(ball_pos[1]);
-        cmd.addDouble(ball_pos[2]);
-        cmd.addDouble(ball_col[0]);
-        cmd.addDouble(ball_col[1]);
-        cmd.addDouble(ball_col[2]);
-        port.write(cmd,reply);
+        cmd.addString("makeSphere");
+        cmd.addFloat64(0.06); // radius
+        cmd.addFloat64(ball_pos[0]); // pose x
+        cmd.addFloat64(ball_pos[1]); // pose y
+        cmd.addFloat64(ball_pos[2]); // pose z
+        cmd.addFloat64(ball_pos[3]); // pose theta_0
+        cmd.addFloat64(ball_pos[4]); // pose theta_1
+        cmd.addFloat64(ball_pos[5]); // pose theta_2
+        cmd.addInt16(static_cast<int16_t>(ball_col[0])); // R
+        cmd.addInt16(static_cast<int16_t>(ball_col[1])); // G
+        cmd.addInt16(static_cast<int16_t>(ball_col[2])); // B
+        auto ok = port.write(cmd,reply);
 
-        yDebug()<<"Ball color "<<(ball_col*255).toString();
+        if(ok && reply.size()>0) {
+            m_ball_name = reply.get(0).asString();
+        }
+        else {
+            yError()<<"Ball not created!";
+            return;
+        }
+
+        yDebug()<<"Ball color "<<ball_col.toString();
     }
 
     /****************************************************/
     void deleteBall()
     {
         Bottle cmd,reply;
-        cmd.addString("world");
-        cmd.addString("del");
-        cmd.addString("all");
-
+        cmd.addString("deleteObject");
+        cmd.addString(m_ball_name);
         port.write(cmd,reply);
     }
 
@@ -71,20 +79,20 @@ public:
     {
         port.open("/ball");
 
-        if (!Network::connect(port.getName(),"/icubSim/world"))
+        if (!Network::connect(port.getName(),"/world_input_port/yarp-find-rgb"))
         {
             yError()<<"Unable to connect to the world!";
             port.close();
             return false;
         }
 
-        ball_pos.resize(3);
-        ball_pos[0]=-0.4;
-        ball_pos[1]=0.925;
-        ball_pos[2]=0.35;
+        ball_pos.resize(6, 0.0);
+        ball_pos[0] = -0.4;
+        ball_pos[1] = 0.325;
+        ball_pos[2] = 0.975;
 
         Rand::init();
-        ball_col=Rand::vector(3);
+        ball_col=255 * Rand::vector(3);
 
         createBall();
 
