@@ -23,6 +23,8 @@ include(ICUBcontribOptions)
 # specify to install in $ICUBcontrib_DIR/bin
 icubcontrib_set_default_prefix()
 
+add_subdirectory(gazebo)
+
 # code for creating a ball in the iCub world
 add_executable(${PROJECT_NAME}-ball ${CMAKE_SOURCE_DIR}/src/ball.cpp)
 target_compile_definitions(${PROJECT_NAME}-ball PRIVATE _USE_MATH_DEFINES)
