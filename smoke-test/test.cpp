@@ -43,30 +43,38 @@ class TestAssignmentYarpFindRgb : public yarp::robottestingframework::TestCase
     Vector                           ball_col;
     Vector                           ball_pos;
 
+    std::string                      m_ball_name;
+
     /****************************************************/
     void createBall()
     {
-        Bottle cmd,reply;
-        cmd.addString("world");
-        cmd.addString("mk");
-        cmd.addString("ssph");
-        cmd.addDouble(0.06);
-        cmd.addDouble(ball_pos[0]);
-        cmd.addDouble(ball_pos[1]);
-        cmd.addDouble(ball_pos[2]);
-        cmd.addDouble(ball_col[0]);
-        cmd.addDouble(ball_col[1]);
-        cmd.addDouble(ball_col[2]);
-        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(ballPort.write(cmd,reply), "Unable to talk to world");
+        Bottle cmd, reply;
+        cmd.addString("makeSphere");
+        cmd.addFloat64(0.06); // radius
+        cmd.addFloat64(ball_pos[0]); // pose x
+        cmd.addFloat64(ball_pos[1]); // pose y
+        cmd.addFloat64(ball_pos[2]); // pose z
+        cmd.addFloat64(ball_pos[3]); // pose theta_0
+        cmd.addFloat64(ball_pos[4]); // pose theta_1
+        cmd.addFloat64(ball_pos[5]); // pose theta_2
+        cmd.addInt16(static_cast<int16_t>(ball_col[0])); // R
+        cmd.addInt16(static_cast<int16_t>(ball_col[1])); // G
+        cmd.addInt16(static_cast<int16_t>(ball_col[2])); // B
+        auto ok = ballPort.write(cmd, reply);
+
+        if (ok && reply.size() > 0) {
+            m_ball_name = reply.get(0).asString();
+        }
+
+        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(ok, "Unable to talk to world");
     }
 
     /****************************************************/
     void deleteBall()
     {
-        Bottle cmd,reply;
-        cmd.addString("world");
-        cmd.addString("del");
-        cmd.addString("all");
+        Bottle cmd, reply;
+        cmd.addString("deleteObject");
+        cmd.addString(m_ball_name);
 
         ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(ballPort.write(cmd,reply), "Unable to talk to world");
     }
@@ -108,8 +116,8 @@ public:
         ballPort.open("/test/ball");
         ROBOTTESTINGFRAMEWORK_TEST_REPORT(Asserter::format("Set rpc timeout = %g [s]",rpcTmo));
         ballPort.asPort().setTimeout(rpcTmo);
-        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(Network::connect(ballPort.getName(),"/icubSim/world"),
-                                  "Unable to connect to /icubSim/world");
+        ROBOTTESTINGFRAMEWORK_ASSERT_ERROR_IF_FALSE(Network::connect(ballPort.getName(),"/world_input_port/yarp-find-rgb"),
+                                  "Unable to connect to /world_input_port/yarp-find-rgb");
 
         Rand::init();
 
@@ -139,7 +147,7 @@ public:
         min[0]=0.0;   max[0]=0.33;
         min[1]=0.331; max[1]=0.66;
         min[2]=0.661; max[2]=1.0;
-        ball_col=Rand::vector(min,max);
+        ball_col=255*Rand::vector(min,max);
 
         // shuffle rgb randomly
         if (Rand::scalar()<0.5)
@@ -149,10 +157,10 @@ public:
         if (Rand::scalar()<0.5)
             swap(ball_col[1],ball_col[2]);
 
-        ball_pos.resize(3,0.0);
-        ball_pos[0]=-0.4;
-        ball_pos[1]=0.925;
-        ball_pos[2]=0.35;
+        ball_pos.resize(6, 0.0);
+        ball_pos[0] = -0.4;
+        ball_pos[1] = 0.325;
+        ball_pos[2] = 0.975;
         createBall();
 
         ROBOTTESTINGFRAMEWORK_TEST_REPORT("Ball has been created!");
@@ -166,7 +174,7 @@ public:
         angle_bottle.addDouble(-50.0);
         anglePort.write();
 
-        Time::delay(5.0);
+        Time::delay(8.0);
         ROBOTTESTINGFRAMEWORK_TEST_REPORT("Testing effectiveness of the controller...");
         int nAxes; ienc->getAxes(&nAxes);
         vector<double> encs(nAxes);
@@ -187,10 +195,6 @@ public:
             r=color_ball->get(0).asDouble();
             g=color_ball->get(1).asDouble();
             b=color_ball->get(2).asDouble();
-
-            r/=255.0;
-            g/=255.0;
-            b/=255.0;
 
             score+=5;
         }
@@ -213,7 +217,11 @@ public:
 
         hsv_true=computeHSV(color_ball[0], color_ball[1], color_ball[2]);
 
-        if ((abs(hsv_true[0]-hsv_received[0])<5.0) && (abs(hsv_true[1]-hsv_received[1])<5.0) && (abs(hsv_true[2]-hsv_received[2])<35.0))
+        yInfo("HSV true... %f %f %f", hsv_true[0], hsv_true[1], hsv_true[2]);
+        yInfo("HSV received... %f %f %f", hsv_received[0], hsv_received[1], hsv_received[2]);
+
+        // V is not considered in the check since is affect by the lighting
+        if ((abs(hsv_true[0]-hsv_received[0])<5.0) && (abs(hsv_true[1]-hsv_received[1])<5.0))
             score+=5;
     }
 

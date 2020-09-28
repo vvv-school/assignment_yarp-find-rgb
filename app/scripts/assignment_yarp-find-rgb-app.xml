@@ -28,13 +28,13 @@
   </module>
 
   <connection>
-        <from>/icubSim/cam/left</from>
+        <from>/icubSim/cam/left/rgbImage:o</from>
         <to>/viewer</to>
         <protocol>udp</protocol>
   </connection>
 
   <connection>
-        <from>/icubSim/cam/left</from>
+        <from>/icubSim/cam/left/rgbImage:o</from>
         <to>/head/img:i</to>
         <protocol>udp</protocol>
   </connection>
@@ -52,5 +52,3 @@
   </connection>
 
 </application>
-
-
