@@ -13,7 +13,6 @@ find_package(ICUB REQUIRED)
 find_package(ICUBcontrib REQUIRED)
 
 # extend the current search path used by cmake to load helpers
-list(APPEND CMAKE_MODULE_PATH ${ICUB_MODULE_PATH})
 list(APPEND CMAKE_MODULE_PATH ${ICUBCONTRIB_MODULE_PATH})
 
 # helpers defining certain macros
