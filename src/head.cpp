@@ -20,9 +20,9 @@
 #include <yarp/os/Time.h>
 
 #include <yarp/dev/Drivers.h>
-#include <yarp/dev/IControlMode2.h>
+#include <yarp/dev/IControlMode.h>
 #include <yarp/dev/IEncoders.h>
-#include <yarp/dev/IPositionControl2.h>
+#include <yarp/dev/IPositionControl.h>
 #include <yarp/dev/PolyDriver.h>
 
 #include <iCub/ctrl/math.h>
