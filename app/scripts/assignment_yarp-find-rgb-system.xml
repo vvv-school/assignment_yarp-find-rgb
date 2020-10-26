@@ -11,6 +11,7 @@
   <module>
       <name>gzserver</name>
       <parameters>assignment_yarp-find-rgb.sdf</parameters>
+      <dependencies>  
          <port timeout="20">/yarplogger</port>
       </dependencies>
       <environment>YARP_FORWARD_LOG_ENABLE=1</environment>
