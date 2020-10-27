@@ -189,7 +189,21 @@ public:
         ROBOTTESTINGFRAMEWORK_TEST_REPORT("Testing ball color...");
 
         double r,g,b;
-        Bottle *color_ball=colorPort.read();
+        unsigned counter = 0;
+        constexpr unsigned maxIter = 100;
+
+        Bottle* color_ball = colorPort.read(false);
+
+        while (!color_ball) {
+            if (++counter == maxIter) {
+                ROBOTTESTINGFRAMEWORK_TEST_REPORT("Failed to read from the color port...");
+                ROBOTTESTINGFRAMEWORK_TEST_CHECK(score > 0, Asserter::format("Total score = %d", score));
+                return;
+            }
+            // Sleep for some while
+            yarp::os::Time::delay(0.05);
+            color_ball = colorPort.read(false);
+        }
         if (color_ball->size()==3)
         {
             r=color_ball->get(0).asDouble();
