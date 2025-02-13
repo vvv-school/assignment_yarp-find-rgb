@@ -94,7 +94,7 @@ public:
     /*****************************************************/
     bool setup(yarp::os::Property& property) override
     {
-        float rpcTmo=(float)property.check("rpc-timeout",Value(10.0)).asDouble();
+        float rpcTmo=(float)property.check("rpc-timeout",Value(10.0)).asFloat64();
 
         Property option;
         option.put("device","remote_controlboard");
@@ -171,7 +171,7 @@ public:
         Bottle &angle_bottle=anglePort.prepare();
         angle_bottle.clear();
         angle_bottle.addString("angle");
-        angle_bottle.addDouble(-50.0);
+        angle_bottle.addFloat64(-50.0);
         anglePort.write();
 
         Time::delay(8.0);
@@ -206,9 +206,9 @@ public:
         }
         if (color_ball->size()==3)
         {
-            r=color_ball->get(0).asDouble();
-            g=color_ball->get(1).asDouble();
-            b=color_ball->get(2).asDouble();
+            r=color_ball->get(0).asFloat64();
+            g=color_ball->get(1).asFloat64();
+            b=color_ball->get(2).asFloat64();
 
             score+=5;
         }
